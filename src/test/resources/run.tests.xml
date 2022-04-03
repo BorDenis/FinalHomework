@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Mvideo">
+    <test name="Все проверки">
+        <classes>
+            <class name="ru.tests.TestCase_1"/>
+            <class name="ru.tests.TestCase_2"/>
+            <class name="ru.tests.TestCase_3"/>
+            <class name="ru.tests.TestCase_4"/>
+            <class name="ru.tests.TestCase_5"/>
+            <class name="ru.tests.TestCase_6"/>
+        </classes>
+    </test>
+</suite>
