@@ -26,6 +26,7 @@ public class Steps {
         productListPage = ProductListPage.getProductListPage();
     }
 
+    //Надо имея поменять на isTabVisible
     public boolean isTabDisplayed(String tabName){
         return mainPage.isTabDisplayed(tabName);
     }
@@ -33,27 +34,48 @@ public class Steps {
     public boolean isTabActive(String tabName){
         return mainPage.isTabActive(tabName);
     }
+
     public boolean isTabDisable(String tabName) {
         return mainPage.isTabDisable(tabName);
     }
 
+    /**
+     * Проверяем, что кнопка отображается и активна
+     * @param tabName
+     */
     public void checkThatTabIsDisplayedAndActive(String tabName){
         Assert.assertTrue(isTabDisplayed(tabName) && isTabActive(tabName));
     }
 
+    /**
+     * Проверяем, что кнопка отображается и не активна
+     * @param tabName
+     */
     public void checkThatTabIsDisplayedAndDisable(String tabName){
         Assert.assertTrue(isTabDisplayed(tabName) && isTabDisable(tabName));
     }
 
+    /**
+     * Сохраняем имя продукта в лист, а цену плюсуем к сумме. Только потом добавляем товар
+     */
+    //Возможно, стоит поменять последовательность. Будет выглядеть логичней.
     public void dayProductButtonToCartClick(){
         productNamesList.add(mainPage.getDayProductName());
         sumProducts += mainPage.getDayProductPrice();
         mainPage.dayProductButtonToCartClick();
     }
 
+    /**
+     * Берем имя продукта по индексу в списке заказа и проверем, есть ли такое в нашем списке добавленных продуктов
+     * @param index
+     */
     public void checkThatProductNameInCartIsCorrect(int index){
         Assert.assertTrue(productNamesList.contains(cartPage.getInCartProductName(index)));
     }
+
+    /**
+     * Проверям что итоговая сумма заказа сходится с суммой цен наших добавленных товаров
+     */
     public void checkThatOrderCostInCartIsCorrect(){
         Assert.assertEquals(cartPage.getInCartOrderPrice(), sumProducts);
     }
@@ -62,6 +84,11 @@ public class Steps {
         Assert.assertTrue(mainPage.dayProductBlockIsVisible());
     }
 
+    /**
+     * Сравниваем ожиданеммое количество товаров в корзине, с фактическим
+     * @param expected
+     */
+    //нужно будет убрать параметры, а тянуть из глобальной переменной, которая будет расти с кликами добавления в корзину
     public void checkCartBubbleCount(int expected){
         Assert.assertEquals(mainPage.getCartBubbleCount(),expected);
     }
@@ -78,6 +105,7 @@ public class Steps {
         cartPage.isInCartOrderSubmitButtonVisible();
     }
 
+    //так же, можно тянуть из глобальной переменной ожидаемый результат
     public void checkThatInCartProductCountCorrect(int expectedCount){
         Assert.assertEquals(cartPage.getInCartProductCount(),expectedCount);
     }
@@ -86,12 +114,18 @@ public class Steps {
         mainPage.blockMostViewedIsVisible();
     }
 
+    //можно сделать общий метод и убрать dayProductButtonToCartClick()
     public void addProductToCardFromMostViewedBlock(int index){
         productNamesList.add(mainPage.getProductNameFromMostViewedBlock(index));
         sumProducts += mainPage.getProductPriceFromMostViewedBlock(index);
         mainPage.addProductToCardFromMostViewedBlock(index);
     }
 
+    /**
+     * Сравниваем два списка по размерам. Если в отфитрованном оказалось меньше элементов, значит нам попались продукты,
+     * которые не подходят по параметрам поиска
+     * @param filterKey
+     */
     public void checkThatAllProductsHaveRightNameCriteria(String filterKey){
         productListPage.loadAllProductsInListing();
         int expected = productListPage.getListSize(productListPage.getElementsListProductNames()),
@@ -100,6 +134,9 @@ public class Steps {
 
     }
 
+    /**
+     * Проверям сортировку "Сначала дороже". В листе со сценами, сравниваем каждую текущую, с последующей
+     */
     public void checkThatSortedPricesGoesFromBigToSmall(){
         List<Integer> priceList = productListPage.getListProductPrices();
         productListPage.loadAllProductsInListing();
@@ -117,11 +154,21 @@ public class Steps {
         mainPage.searchFieldIsVisible();
     }
 
+    /**
+     * Проверяет, входит ли ожидаемая часть адресного пути, в фактический адрес страницы
+     * @param expectedURL
+     */
     public void checkCurrentURL(String expectedURL){
         String current = WebDriverRunner.getWebDriver().getCurrentUrl();
         Assert.assertTrue(current.contains(expectedURL));
     }
 
+    /**
+     * Перегруженный метод, также сравнивает запрошенный текст в поисковой строке и в адресе страницы
+     * Пока что, только для текста без пробелов
+     * @param expectedURL
+     * @param searchParam
+     */
     public void checkCurrentURL(String expectedURL, String searchParam){
         String current = WebDriverRunner.getWebDriver().getCurrentUrl();
         Assert.assertTrue(current.contains(expectedURL) && current.contains("?q="+searchParam));
@@ -135,6 +182,11 @@ public class Steps {
         Assert.assertEquals(productListPage.getTextSortDropdown(), text);
     }
 
+    /**
+     *Выставляет нужный тип сортировки
+     * @param text
+     */
+    //добавить скролинг на кнопку, в начале метода
     public void changeSortType(String text){
         productListPage.sortDropdownIconClick();
         productListPage.sortDropdownOptionsIsVisible();

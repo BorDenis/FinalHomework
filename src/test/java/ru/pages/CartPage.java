@@ -22,23 +22,37 @@ public class CartPage {
         if (Objects.isNull(cartPage)) cartPage = Selenide.page(new CartPage());
         return cartPage;
     }
+
+    /**
+     * Получить карточку товара по индексу из списка заказа
+     * @param index
+     * @return
+     */
     public SelenideElement getCartOrderProductCard(int index){
         return Selenide.$x(String.format(XPATH_CART_ORDER_PRODUCTS, index));
     }
+
     public void titleMyCartIsVisible(){
         Selenide.$x("//span[text() = 'Моя корзина']").shouldBe(Condition.visible);
     }
 
+    /**
+     * Получить сумму всего заказа
+     * @return
+     */
     public int getInCartOrderPrice(){
         String price = Selenide.$x(XPATH_ORDER_LIST_CONTENT).$x(".//span[@class = 'c-cost-line__text']").getText();
         return Integer.parseInt(price.replaceAll("[^\\d]", ""));
     }
+
     public String getInCartProductName(int index){
         return getCartOrderProductCard(index).$x(XPATH_IN_CART_PRODUCT_NAME).getText();
     }
+
     public void isInCartOrderSubmitButtonVisible (){
         Selenide.$x(XPATH_ORDER_LIST_CONTENT).$x(".//input[contains(@class, 'c-btn')]").shouldBe(Condition.visible);
     }
+
     public int getInCartProductCount(){
         String count = Selenide.$x(XPATH_ORDER_LIST_CONTENT).$x(".//span[contains(@class, 'c-cost-lin')]").getText();
         return Integer.parseInt(count.replaceAll("[^\\d]", ""));

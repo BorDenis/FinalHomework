@@ -25,6 +25,9 @@ public class ProductListPage {
         return productListPage;
     }
 
+    /**
+     * Листинг стекой, поделен на 6 рядов по 4 продукта в каждом. Метод пробегает по всем рядам, подгружая их
+     */
     public void loadAllProductsInListing(){
         for (int i = 1; i < 7; i++){
             getProductCardsRow(i).scrollIntoView(true).shouldBe(Condition.visible);
@@ -43,6 +46,10 @@ public class ProductListPage {
         return Selenide.$$x(XPATH_PRODUCT_CARDS_ROW+"//span[contains(@class, 'price__main-value')]");
     }
 
+    /**
+     * Перебираем все элементы списка и вытягиваем только отформатированные цены, в другой список
+     * @return
+     */
     public List<Integer> getListProductPrices(){
         List<Integer> priceList = new ArrayList<>();
         for (SelenideElement elem : getElementsListProductPrices()){
@@ -56,6 +63,11 @@ public class ProductListPage {
 
     }
 
+    /**
+     * Создает список, в который входят все продукты, название в которых соответствует аргументу
+     * @param filterKey
+     * @return
+     */
     public List<SelenideElement> getFilteredListProductNames(String filterKey){
         return getElementsListProductNames().stream().filter(item -> item.getText().toLowerCase(Locale.ROOT).contains(filterKey)).toList();
     }

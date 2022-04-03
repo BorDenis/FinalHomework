@@ -69,6 +69,9 @@ public class MainPage {
         return !element.getAttribute("class").contains("disabled");
     }
 
+    /**
+     * Добавить товар дня в розину
+     */
     public void dayProductButtonToCartClick(){
         dayProductMainButton.scrollIntoView(false).click();
     }
@@ -82,6 +85,10 @@ public class MainPage {
         return Integer.parseInt(price.replaceAll("[^\\d]", ""));
     }
 
+    /**
+     * Получить количество добавленных товаров из бабла корзины
+     * @return
+     */
     public int getCartBubbleCount(){
         return Integer.parseInt(Selenide.$x(XPATH_CART_BUBBLE).getText());
     }
@@ -92,16 +99,27 @@ public class MainPage {
         return dayProductBlock.isDisplayed();
     }
 
+    //Периодически, при открытии в новом браузере, блок с самыми популярными товарами может быть не самым верхним, а
+    //находиться в самом низу. Так как я не нашел за что можно зацепиться у не загруженных блоков, решил заскролиться на оба
     public void blockMostViewedIsVisible(){
         Selenide.$x("//mvid-simple-product-collection-mp").scrollIntoView(true);
         Selenide.$x("//mvid-simple-product-collection-mp[2]").scrollIntoView(true);
         Selenide.$x(XPATH_MOST_VIEWED_PRODUCTS_BLOCK).shouldBe(Condition.visible);
     }
 
+    /**
+     * Получить продукт из блока "Самые популярные" по порядковому номеру
+     * @param index
+     * @return
+     */
     public SelenideElement getProductFromMostViewedBlock(int index){
         return Selenide.$x(String.format(XPATH_MOST_VIEWED_PRODUCTS_BLOCK + XPATH_MOST_VIEWED_PRODUCT_NAME, index));
     }
 
+    /**
+     * Добавляем товар в корзину и ждем, пока в бабле не обновится каунтер
+     * @param index
+     */
     public void addProductToCardFromMostViewedBlock(int index){
         getProductFromMostViewedBlock(index).$x("following::button").scrollIntoView(false).shouldBe(Condition.visible).click();
         cartBubbleCount += 1;
@@ -114,7 +132,7 @@ public class MainPage {
 
     public int getProductPriceFromMostViewedBlock(int index){
         String price = getProductFromMostViewedBlock(index).$x("following::span[contains(@class, 'price__main-value')]").getText();
-        return Integer.parseInt(price.replaceAll("[^\\d]", ""));
+        return Integer.parseInt(price.replaceAll("[^\\d]", "")); //Берем из текста, только цифры
     }
 
     public void tabClick(String tabName){
@@ -125,6 +143,9 @@ public class MainPage {
         Selenide.$x("//div[contains(@class, 'search-container')]").shouldBe(Condition.visible);
     }
 
+    /**
+     * После нажатия на поиск, ждем отображения строки с количествиенным резульатом поиска
+     */
     public void buttonSearchClick(){
         Selenide.$x("//mvid-icon[contains(@class, 'search-icon')]").click();
         Selenide.$x("//p[contains(@class, 'srp-title')]").shouldBe(Condition.visible);
