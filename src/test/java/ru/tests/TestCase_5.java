@@ -1,6 +1,8 @@
 package ru.tests;
 
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.WebDriverRunner;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import ru.steps.Steps;
 
@@ -16,4 +18,10 @@ public class TestCase_5 {
         steps.checkCurrentURL("/product-list-page", searchText);
         steps.checkThatAllProductsHaveRightNameCriteria(searchText);
     }
+
+    @AfterClass
+    public void aClass(){
+        WebDriverRunner.closeWebDriver();
+    }
+
 }
